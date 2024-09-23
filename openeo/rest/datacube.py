@@ -2070,6 +2070,23 @@ class DataCube(_ProcessGraphAbstraction):
         })
 
     @openeo_process
+    def sen2like(self, target_product: str = "L2F", cloud_cover: int = 50, export_original_files: bool = False) -> DataCube:
+        """
+        The Sen2like processor generates Sentinel-2-like harmonised or fused surface reflectances with higher periodicity by integrating additional compatible optical mission sensors. The source code is available at https://github.com/senbox-org/sen2like.
+
+        :param target_product: Per default the target_product is set to 'L2F' to generate the fused sen2like product. Set to 'L2H' to generate the harmonised product.
+        :param cloud_cover: The Cloud coverage parameter (percentage) to filter MGRS image tile contaminates with strong cloud coverage.
+        :param export_original_files: Sen2like produces outputs following the Sentinel 2 .SAFE convention. To enable the download for these, set this to True. The results will then include .zip files with the .SAFE folders inside.
+        :return: Sen2like enriched data cube for further processing. The resolution is based on the highest resolution of the requested bands, where bands with lower resolution are resampled to the higher resolution respectively.
+        """
+        return self.process('sen2like', {
+            'data': THIS,
+            'target_product': target_product,
+            'cloud_cover': cloud_cover,
+            'export_original_files': export_original_files,
+        })
+
+    @openeo_process
     def save_result(
         self,
         format: str = _DEFAULT_RASTER_FORMAT,
